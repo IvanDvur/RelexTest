@@ -42,4 +42,8 @@ public class MainController {
     public List<Integer> getAscendingSeq(@RequestParam(name = "jsonUrl",required = false) String jsonUrl){
         return relexService.getAscendingSequences(jsonUrl);
     }
+    @GetMapping("/getDescend")
+    public List<Integer> getDescendingSeq(@RequestParam(name = "jsonUrl",required = false) String jsonUrl){
+        return relexService.getDescendingSequences(jsonUrl);
+    }
 }

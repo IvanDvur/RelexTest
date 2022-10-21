@@ -81,7 +81,24 @@ public class RelexServiceImpl {
     }
 
     //    Поиск самой длинной(ых) возрастающих последовательностей
-    public ArrayList<Integer[]> getDescendingSequences(String url) {
-        return null;
+    public List<Integer> getDescendingSequences(String url) {
+        List<Integer> numbers = createListFromFile(url);
+        List<Integer> longestArray = new ArrayList<>();
+        List<Integer> currentArray = new ArrayList<>();
+        for (int i = 1; i < numbers.size(); i++) {
+            if (currentArray.isEmpty()) {
+                currentArray.add(numbers.get(i - 1));
+            }
+            if (numbers.get(i) < numbers.get(i - 1)) {
+                currentArray.add(numbers.get(i));
+            } else {
+                if (longestArray.size() < currentArray.size()) {
+                    longestArray.clear();
+                    longestArray.addAll(currentArray);
+                }
+                currentArray.clear();
+            }
+        }
+        return longestArray;
     }
 }
