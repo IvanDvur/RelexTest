@@ -1,14 +1,18 @@
 package com.example.relextest;
 
+import com.example.relextest.model.RequestDto;
+import com.example.relextest.model.ResponseDto;
 import com.example.relextest.service.RelexServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MainController {
 
     RelexServiceImpl relexService;
@@ -19,31 +23,33 @@ public class MainController {
     }
 
     @GetMapping("/max")
-    public Integer getMaxValue(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
-        return relexService.getMaxValue(jsonUrl);
+    public ResponseDto getMaxValue(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
+        return new ResponseDto(relexService.getMaxValue(jsonUrl));
     }
 
     @GetMapping("/min")
-    public Integer getMinValue(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
-        return relexService.getMinValue(jsonUrl);
+    public ResponseDto getMinValue(@RequestBody RequestDto requestDto) {
+        return new ResponseDto(this.relexService.getMinValue(requestDto.getPath()));
     }
 
     @GetMapping("/average")
-    public Double getAverage(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
-        return relexService.getAverage(jsonUrl);
+    public ResponseDto getAverage(@RequestBody RequestDto requestDto) {
+        return new ResponseDto(relexService.getAverage(requestDto.getPath()));
     }
 
     @GetMapping("/mediane")
-    public Double getMediane(@RequestParam(name = "jsonUrl",required = false) String jsonUrl){
-        return relexService.getMediane(jsonUrl);
+    public ResponseDto getMediane(@RequestBody RequestDto requestDto) {
+        return new ResponseDto(relexService.getMediane(requestDto.getPath()));
     }
 
     @GetMapping("/getAscend")
-    public List<Integer> getAscendingSeq(@RequestParam(name = "jsonUrl",required = false) String jsonUrl){
-        return relexService.getAscendingSequences(jsonUrl);
+    public ResponseDto getAscendingSeq(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
+        return null;
     }
+
     @GetMapping("/getDescend")
-    public List<Integer> getDescendingSeq(@RequestParam(name = "jsonUrl",required = false) String jsonUrl){
-        return relexService.getDescendingSequences(jsonUrl);
+    public ResponseDto getDescendingSeq(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
+        return null;
     }
 }
+
