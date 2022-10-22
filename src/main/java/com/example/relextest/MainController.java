@@ -22,34 +22,43 @@ public class MainController {
         this.relexService = relexService;
     }
 
-    @GetMapping("/max")
-    public ResponseDto getMaxValue(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
-        return new ResponseDto(relexService.getMaxValue(jsonUrl));
-    }
+    @GetMapping(value = {"/makeoperation", "/makeoperation/{operation}"})
+    public ResponseDto makeoperation(@RequestBody RequestDto requestDto,
+                                     @PathVariable(name = "operation", required = false) String operation) {
 
-    @GetMapping("/min")
-    public ResponseDto getMinValue(@RequestBody RequestDto requestDto) {
-        return new ResponseDto(this.relexService.getMinValue(requestDto.getPath()));
-    }
+//        Если операция указана в JSON
+        if (operation == null && requestDto.getOperation() != null) {
+            if (requestDto.getOperation().equals("get_max"))
+                return new ResponseDto(relexService.getMaxValue(requestDto.getPath()));
+            if (requestDto.getOperation().equals("get_min"))
+                return new ResponseDto(relexService.getMinValue(requestDto.getPath()));
+            if (requestDto.getOperation().equals("get_average"))
+                return new ResponseDto(relexService.getAverage(requestDto.getPath()));
+            if (requestDto.getOperation().equals("get_mediane"))
+                return new ResponseDto(relexService.getMediane(requestDto.getPath()));
+            if(requestDto.getOperation().equals("get_ascend"))
+                return new ResponseDto(relexService.getAscendingSequences(requestDto.getPath()));
+            if(requestDto.getOperation().equals("get_descend"))
+                return new ResponseDto(relexService.getDescendingSequences(requestDto.getPath()));
+        }
 
-    @GetMapping("/average")
-    public ResponseDto getAverage(@RequestBody RequestDto requestDto) {
-        return new ResponseDto(relexService.getAverage(requestDto.getPath()));
-    }
-
-    @GetMapping("/mediane")
-    public ResponseDto getMediane(@RequestBody RequestDto requestDto) {
-        return new ResponseDto(relexService.getMediane(requestDto.getPath()));
-    }
-
-    @GetMapping("/getAscend")
-    public ResponseDto getAscendingSeq(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
+//        Если операция указана в URL
+        if (operation != null && requestDto.getOperation() == null) {
+            if (operation.equals("get_max"))
+                return new ResponseDto(relexService.getMaxValue(requestDto.getPath()));
+            if (operation.equals("get_min"))
+                return new ResponseDto(relexService.getMinValue(requestDto.getPath()));
+            if (operation.equals("get_average"))
+                return new ResponseDto(relexService.getAverage(requestDto.getPath()));
+            if (operation.equals("get_mediane"))
+                return new ResponseDto(relexService.getMediane(requestDto.getPath()));
+            if(operation.equals("get_ascend"))
+                return new ResponseDto(relexService.getAscendingSequences(requestDto.getPath()));
+            if(operation.equals("get_descend"))
+                return new ResponseDto(relexService.getDescendingSequences(requestDto.getPath()));
+        }
         return null;
     }
 
-    @GetMapping("/getDescend")
-    public ResponseDto getDescendingSeq(@RequestParam(name = "jsonUrl", required = false) String jsonUrl) {
-        return null;
-    }
 }
 
