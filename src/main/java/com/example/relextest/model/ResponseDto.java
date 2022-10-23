@@ -1,10 +1,8 @@
 package com.example.relextest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class ResponseDto {
 
-    String result;
+    private String result;
 
     public ResponseDto(String result) {
         this.result = result;

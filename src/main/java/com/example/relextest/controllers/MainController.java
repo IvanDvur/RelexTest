@@ -1,46 +1,51 @@
-package com.example.relextest;
+package com.example.relextest.controllers;
 
+import com.example.relextest.model.FullResponceDto;
 import com.example.relextest.model.RequestDto;
 import com.example.relextest.model.ResponseDto;
-import com.example.relextest.service.RelexServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.relextest.service.RelexService;
+import com.example.relextest.service.SingleFileService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MainController {
 
-    RelexServiceImpl relexService;
+    private final RelexService relexService;
+    private final SingleFileService singleFileService;
 
-    @Autowired
-    public MainController(RelexServiceImpl relexService) {
+    public MainController(RelexService relexService, SingleFileService singleFileService) {
         this.relexService = relexService;
+        this.singleFileService = singleFileService;
     }
 
+    // Получение результатов по отдельности в JSON или XML формате
     @GetMapping(value = {"/makeoperation", "/makeoperation/{operation}"},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseDto makeoperation(@RequestBody RequestDto requestDto,
                                      @PathVariable(name = "operation", required = false) String operation) {
 //        Если операция указана в JSON
         if (operation == null && requestDto.getOperation() != null) {
+//            Максимальное значение
             if (requestDto.getOperation().equals("get_max"))
                 return new ResponseDto(relexService.getMaxValue(requestDto.getPath()));
+//            Минимальное значение
             if (requestDto.getOperation().equals("get_min"))
                 return new ResponseDto(relexService.getMinValue(requestDto.getPath()));
+//            Среднее арифметическое
             if (requestDto.getOperation().equals("get_average"))
                 return new ResponseDto(relexService.getAverage(requestDto.getPath()));
+//            Медиана
             if (requestDto.getOperation().equals("get_mediane"))
                 return new ResponseDto(relexService.getMediane(requestDto.getPath()));
+//            Возрастающие последовательности
             if (requestDto.getOperation().equals("get_ascend"))
                 return new ResponseDto(relexService.getAscendingSequences(requestDto.getPath()));
+//            Убывающие последовательности
             if (requestDto.getOperation().equals("get_descend"))
                 return new ResponseDto(relexService.getDescendingSequences(requestDto.getPath()));
         }
@@ -59,18 +64,14 @@ public class MainController {
             if (operation.equals("get_descend"))
                 return new ResponseDto(relexService.getDescendingSequences(requestDto.getPath()));
         }
-        return null;
+        return new ResponseDto("Error: file not found or conflict of requests");
     }
 
+    // Передача файла и получение результатов единым ответом
+    @PostMapping("/upload")
+    public FullResponceDto uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        return new FullResponceDto(singleFileService.getValues(singleFileService.multipartFileToFile(file)));
+    }
 
-//    @PostMapping(path = "/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseDto uploadfile(@RequestParam("file")MultipartFile file){
-//        try(InputStream is = file.getInputStream()){
-//            return new ResponseDto(relexService.getMinValue(is.))
-//        }catch (IOException e){
-//            return new ResponseDto("Ошибка");
-//        }
-//        return null;
-//    }
 }
 

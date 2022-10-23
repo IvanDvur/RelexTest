@@ -10,18 +10,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class RelexServiceImpl {
+public class RelexService {
 
-    private List<String> fileNumbers;
+    private List<String> stringsFromFile;
 
     // Создание коллекции из файла
     public List<Integer> createListFromFile(String url) {
         try {
-            fileNumbers = Files.readAllLines(new File(url).toPath(), Charset.defaultCharset());
+            stringsFromFile = Files.readAllLines(new File(url).toPath(), Charset.defaultCharset());
         } catch (IOException e) {
             System.out.println("Файл не найден");
         }
-        return fileNumbers.stream().map(Integer::parseInt).collect(Collectors.toList());
+        return stringsFromFile.stream().map(Integer::parseInt).collect(Collectors.toList());
     }
 
     // Поиск максимального значения
@@ -88,7 +88,6 @@ public class RelexServiceImpl {
             return "No ascending sequences";
         }
     }
-
 
     // Поиск самой длинной(ых) убывающих последовательностей
     public String getDescendingSequences(String url) {

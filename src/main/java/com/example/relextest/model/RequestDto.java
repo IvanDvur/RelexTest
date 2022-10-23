@@ -1,10 +1,9 @@
 package com.example.relextest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class RequestDto {
-    String path;
-    String operation;
+
+    private String path;
+    private String operation;
 
     public String getPath() {
         return path;
