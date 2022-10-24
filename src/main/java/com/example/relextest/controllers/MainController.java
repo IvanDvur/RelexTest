@@ -68,7 +68,7 @@ public class MainController {
     }
 
     // Передача файла и получение результатов единым ответом
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload",produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE} )
     public FullResponceDto uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return new FullResponceDto(singleFileService.getValues(singleFileService.multipartFileToFile(file)));
     }
